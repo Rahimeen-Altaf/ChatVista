@@ -46,8 +46,6 @@ const AppLayout = () => (WrappedComponent) => {
             Third
           </Grid>
         </Grid>
-
-        <WrappedComponent {...props} />
       </>
     );
   };
