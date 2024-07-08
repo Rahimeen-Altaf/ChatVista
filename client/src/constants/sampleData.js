@@ -17,9 +17,22 @@ export const sampleChats = [
   },
   {
     avatar: ["http://www.w3schools.com/howto/img_avatar.png"],
-    name: "Rah Badaam",
+    name: "Selina Gomez",
     _id: "3",
     groupChat: false,
     members: ["1", "2", "3"],
   },
 ];
+
+export const sampleUsers = [
+  {
+    avatar: ["http://www.w3schools.com/howto/img_avatar.png"],
+    name: "John Doe",
+    _id: "1",
+  },
+  {
+    avatar: ["http://www.w3schools.com/howto/img_avatar.png"],
+    name: "Aleena Hadeed",
+    _id: "2",
+  }
+]
