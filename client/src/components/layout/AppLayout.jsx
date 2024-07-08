@@ -1,10 +1,23 @@
 import { Grid } from "@mui/material";
 import Title from "../shared/Title";
 import Header from "./Header";
+import ChatList from "../specific/ChatList";
+import { sampleChats } from "../../constants/sampleData";
+import { useParams } from "react-router-dom";
 
 const AppLayout = () => (WrappedComponent) => {
+  
   // eslint-disable-next-line react/display-name
   return (props) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const params = useParams();
+    const chatId = params.chatId;
+
+    const handleDeleteChat = (e, _id, groupChat) => {
+      e.preventDefault();
+      console.log("Delete Chat", _id, groupChat);
+    }
+
     return (
       <>
         <Title />
@@ -20,7 +33,16 @@ const AppLayout = () => (WrappedComponent) => {
             }}
             height={"100%"}
           >
-            First
+            <ChatList chats={sampleChats} chatId={chatId}
+              // onlineUsers={["1", "2", "3"]}
+              // newMessagesAlert={[
+              //   {
+              //     chatId: "1",
+              //     count: 3,
+              //   },
+              // ]}
+            handleDeleteChat={handleDeleteChat}
+            />
           </Grid>
           <Grid
             item
