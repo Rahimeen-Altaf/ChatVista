@@ -36,3 +36,20 @@ export const sampleUsers = [
     _id: "2",
   }
 ]
+
+export const sampleNotifications = [
+  {
+    sender: {
+      avatar: ["http://www.w3schools.com/howto/img_avatar.png"],
+    name: "John Doe"
+  },
+    _id: "1",
+  },
+  {
+    sender: {
+      avatar: ["http://www.w3schools.com/howto/img_avatar.png"],
+    name: "Aleena Hadeed"
+  },
+    _id: "2",
+  }
+]
