@@ -53,3 +53,33 @@ export const sampleNotifications = [
     _id: "2",
   }
 ]
+
+export const sampleMessage =[
+  {
+    attachments: [],
+    content: "Hello",
+    _id: "asjsdj",
+    sender: {
+      _id: "user._id",
+      name: "John Doe",
+    },
+    chat: "chatId",
+    createdAt: "2024-07-05T20:00:00.000Z",
+  },
+  {
+    attachments: [
+      {
+        public_id: "rahii",
+        url: "http://www.w3schools.com/howto/img_avatar.png"
+      },
+    ],
+    content: "",
+    _id: "asjsdjii",
+    sender: {
+      _id: "123",
+      name: "Selena Gomez",
+    },
+    chat: "chatId",
+    createdAt: "2024-07-05T20:00:00.000Z",
+  },
+];
