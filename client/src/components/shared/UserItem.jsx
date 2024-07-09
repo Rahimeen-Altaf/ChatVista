@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import { Avatar, IconButton, ListItem, Stack, Typography } from "@mui/material";
 import { memo } from "react";
-import { Add as AddIcon } from "@mui/icons-material";
+import { Add as AddIcon, Remove as RemoveIcon } from "@mui/icons-material";
 
-const UserItem = ({ user, handler, handlerIsLoading }) => {
+const UserItem = ({ user, handler, handlerIsLoading, isAdded=false }) => {
   const { name, _id, avatar } = user;
   return (
     <ListItem>
@@ -31,14 +31,16 @@ const UserItem = ({ user, handler, handlerIsLoading }) => {
         <IconButton
         size="small"
         sx={{
-            bgcolor: "primary.main",
+            bgcolor: isAdded ? "error.main" : "primary.main",
             color: "white",
             "&:hover": {
-            bgcolor: "primary.dark"
+            bgcolor: isAdded ? "error.dark" : "primary.dark"
             }
         }}
         onClick={() => handler(_id)} disabled={handlerIsLoading}>
-          <AddIcon />
+
+          {isAdded ? <RemoveIcon /> : <AddIcon />}
+          
         </IconButton>
       </Stack>
     </ListItem>

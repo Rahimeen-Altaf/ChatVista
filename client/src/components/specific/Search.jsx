@@ -3,7 +3,6 @@ import {
   DialogTitle,
   InputAdornment,
   List,
-  ListItem,
   Stack,
   TextField,
 } from "@mui/material";
@@ -45,14 +44,12 @@ const Search = () => {
         <List>
           {users.map((i) => (
             // eslint-disable-next-line react/jsx-key
-            <ListItem>
               <UserItem
                 user={i}
                 key={i._id}
                 handler={addFriendHandler}
                 handlerIsLoading={isLoadingSendFriendRequest}
               />
-            </ListItem>
           ))}
         </List>
       </Stack>
