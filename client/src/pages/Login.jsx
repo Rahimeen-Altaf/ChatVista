@@ -5,6 +5,7 @@ import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { VisuallyHiddenInput } from "../components/styles/StyledComponents";
 import { useFileHandler, useInputValidation, useStrongPassword } from '6pp'
 import { usernameValidator } from "../utils/validators";
+import { bgGradient } from "../constants/color";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -30,9 +31,7 @@ const Login = () => {
 
   return (
     <div style={{
-      backgroundImage: 
-      "linear-gradient(rgb(253 134 209 / 50%), rgba(120, 110, 220, 0.5))",
-    
+      backgroundImage: bgGradient,
     }}>
     <Container component={"main"} maxWidth="xs" sx={{height: "100vh", display: "flex", justifyContent: "center", alignItems: "center"}}>
       <Paper

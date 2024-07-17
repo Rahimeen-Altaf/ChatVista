@@ -57,7 +57,7 @@ const NewGroup = () => {
         </Stack>
 
         <Stack direction={"row"} justifyContent={"space-evenly"}>
-          <Button variant="text" color="error" size="large">
+          <Button variant="text" color="error" size="large" onClick={closeHandler}>
             Cancel
           </Button>
           <Button variant="contained" size="large" onClick={submitHandler}>
