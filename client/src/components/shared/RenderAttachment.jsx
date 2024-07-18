@@ -13,6 +13,7 @@ const RenderAttachment = (file, url) => {
           alt="attachment"
           width={"200px"}
           height={"150px"}
+          align="center"
           style={{
             objectFit: "contain",
           }}
