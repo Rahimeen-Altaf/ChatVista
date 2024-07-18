@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { Link as LinkComponent, Navigate, useLocation } from "react-router-dom";
-import { grayColor } from "../../constants/color";
+import { grayColor, matBlack } from "../../constants/color";
 
 const Link = styled(LinkComponent)`
   text-decoration: none;
@@ -39,12 +39,12 @@ const adminTabs = [
   },
   {
     name: "Users",
-    path: "/admin/users-management",
+    path: "/admin/users",
     icon: <ManageAccountsIcon />,
   },
   {
     name: "Chats",
-    path: "/admin/chats-management",
+    path: "/admin/chats",
     icon: <GroupsIcon />,
   },
   {
@@ -74,9 +74,11 @@ const SideBar = ({ w = "100%" }) => {
             to={tab.path}
             sx={
               location.pathname === tab.path && {
-                backgroundColor: "rgba(0,0,0,0.1)",
-                color: "black",
-                borderRadius: "2rem",
+                bgcolor: matBlack,
+                color: "white",
+                ":hover": {
+                  color: "white",
+                },
               }
             }
           >
@@ -100,7 +102,6 @@ const SideBar = ({ w = "100%" }) => {
   );
 };
 
-
 const isAdmin = true;
 const AdminLayout = ({ children }) => {
   const [isMobile, setIsMobile] = useState(false);
@@ -108,7 +109,6 @@ const AdminLayout = ({ children }) => {
   const handleMobile = () => setIsMobile(!isMobile);
 
   const handleClose = () => setIsMobile(false);
-
 
   if (!isAdmin) return <Navigate to="/admin" />;
 
