@@ -1,0 +1,10 @@
+libraries used in this project
+react-router-dom
+6pp
+moment
+mui library
+react chartjs 2
+react-hot-toast
+react-helmet-async
+mui icons
+mui data-grid 

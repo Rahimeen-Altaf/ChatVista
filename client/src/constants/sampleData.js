@@ -82,3 +82,32 @@ export const sampleMessage =[
     createdAt: "2024-07-05T20:00:00.000Z",
   },
 ];
+
+export const dashboardData = {
+  users: [
+    {
+      name: "John Doe",
+      avatar: ["http://www.w3schools.com/howto/img_avatar.png"],
+      _id: "1",
+      username: "john_doe",
+      friends: 15,
+      groups: 6,
+    },
+    {
+      name: "Aleena Hadeed",
+      avatar: ["http://www.w3schools.com/howto/img_avatar.png"],
+      _id: "2",
+      username: "aleena_hadeed",
+      friends: 10,
+      groups: 4,
+    },
+    {
+      name: "Selena Gomez",
+      avatar: ["http://www.w3schools.com/howto/img_avatar.png"],
+      _id: "3",
+      username: "selena_gomez",
+      friends: 20,
+      groups: 8,
+    },
+  ]
+}
