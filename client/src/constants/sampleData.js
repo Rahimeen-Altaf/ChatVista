@@ -40,20 +40,20 @@ export const sampleNotifications = [
   {
     sender: {
       avatar: ["http://www.w3schools.com/howto/img_avatar.png"],
-    name: "John Doe"
-  },
+      name: "John Doe"
+    },
     _id: "1",
   },
   {
     sender: {
       avatar: ["http://www.w3schools.com/howto/img_avatar.png"],
-    name: "Aleena Hadeed"
-  },
+      name: "Aleena Hadeed"
+    },
     _id: "2",
   }
 ]
 
-export const sampleMessage =[
+export const sampleMessage = [
   {
     attachments: [],
     content: "Hello",
@@ -109,5 +109,55 @@ export const dashboardData = {
       friends: 20,
       groups: 8,
     },
-  ]
+  ],
+
+  chats: [
+    {
+      name: "Best Friends Group",
+      avatar: ["http://www.w3schools.com/howto/img_avatar.png"],
+      _id: "1",
+      groupChat: false,
+      members: [{ _id: "1", avatar: "http://www.w3schools.com/howto/img_avatar.png" },
+      { _id: "2", avatar: "http://www.w3schools.com/howto/img_avatar.png" },
+      ],
+      totalMembers: 2,
+      totalMessages: 20,
+      creator: {
+        name: "Selena Gomez",
+        avatar: "http://www.w3schools.com/howto/img_avatar.png",
+      }
+    },
+    {
+      name: "Family Group",
+      avatar: ["http://www.w3schools.com/howto/img_avatar.png"],
+      _id: "2",
+      groupChat: false,
+      members: [{ _id: "1", avatar: "http://www.w3schools.com/howto/img_avatar.png" },
+      { _id: "2", avatar: "http://www.w3schools.com/howto/img_avatar.png" },
+      { _id: "3", avatar: "http://www.w3schools.com/howto/img_avatar.png" }
+      ],
+      totalMembers: 3,
+      totalMessages: 30,
+      creator: {
+        name: "Aleena Hadid",
+        avatar: "http://www.w3schools.com/howto/img_avatar.png",
+      }
+    },
+    {
+      name: "Work Group",
+      avatar: ["http://www.w3schools.com/howto/img_avatar.png"],
+      _id: "3",
+      groupChat: true,
+      members: [{ _id: "1", avatar: "http://www.w3schools.com/howto/img_avatar.png" },
+      { _id: "2", avatar: "http://www.w3schools.com/howto/img_avatar.png" },
+      { _id: "3", avatar: "http://www.w3schools.com/howto/img_avatar.png" }
+      ],
+      totalMembers: 3,
+      totalMessages: 30,
+      creator: {
+        name: "John Doe",
+        avatar: "http://www.w3schools.com/howto/img_avatar.png",
+      }
+    },
+  ],
 }
