@@ -24,7 +24,7 @@ app.use(isAuthenticated);
 // Create new Group Chat
 app.post("/new", newGroupChat);
 
-// Get My Profile
+// Get My chats
 app.get("/my", getMyChats);
 
 // Get My Groups
