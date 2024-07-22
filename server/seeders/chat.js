@@ -1,6 +1,7 @@
 import { faker, simpleFaker } from "@faker-js/faker";
 import { Chat } from "../models/Chat.js";
 import { User } from "../models/user.js";
+import { Message } from "../models/Message.js";
 
 const createSingleChats = async (numChats) => {
   try {
