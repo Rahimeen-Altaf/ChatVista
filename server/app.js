@@ -6,6 +6,7 @@ import { connectDb } from './utils/features.js';
 
 import chatRoute from './routes/chat.js';
 import userRoute from './routes/user.js';
+import { createMessagesInAChat } from "./seeders/chat.js";
 
 dotenv.config({
     path: './.env'
