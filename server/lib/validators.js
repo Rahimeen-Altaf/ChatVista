@@ -78,6 +78,10 @@ const acceptRequestValidator = () => [
     .withMessage("Accept must be a boolean"),
 ];
 
+const adminLoginValidator = () => [
+  body("secretKey", "Secret Key is required").notEmpty(),
+];
+
 export {
   addMemberValidator,
   chatIdValidator,
@@ -90,4 +94,5 @@ export {
   renameGroupValidator,
   sendRequestValidator,
   acceptRequestValidator,
+  adminLoginValidator,
 };

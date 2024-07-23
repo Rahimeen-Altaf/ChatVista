@@ -1,19 +1,20 @@
-import cookieParser from 'cookie-parser';
-import dotenv from 'dotenv';
-import express from 'express';
-import { errorMiddleware } from './middlewares/error.js';
-import { connectDb } from './utils/features.js';
+import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+import express from "express";
+import { errorMiddleware } from "./middlewares/error.js";
+import { connectDb } from "./utils/features.js";
 
-import chatRoute from './routes/chat.js';
-import userRoute from './routes/user.js';
-import adminRoute from './routes/admin.js';
+import chatRoute from "./routes/chat.js";
+import userRoute from "./routes/user.js";
+import adminRoute from "./routes/admin.js";
 
 dotenv.config({
-    path: './.env'
+  path: "./.env",
 });
 
 const mongoURI = process.env.MONGO_URI;
 const port = process.env.PORT || 3000;
+export const adminSecretKey = process.env.ADMIN_SECRET_KEY || "Rahimeen Altaf";
 
 connectDb(mongoURI);
 
@@ -27,12 +28,12 @@ app.use("/user", userRoute);
 app.use("/chat", chatRoute);
 app.use("/admin", adminRoute);
 
-app.get('/', (req, res) => {
-    res.send('ChatVista App!');
-});      
+app.get("/", (req, res) => {
+  res.send("ChatVista App!");
+});
 
-app.use(errorMiddleware)
+app.use(errorMiddleware);
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+  console.log(`Server is running on port ${port}`);
 });
