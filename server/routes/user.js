@@ -8,6 +8,7 @@ import {
   sendFriendRequest,
   acceptFriendRequest,
   getMyNotifications,
+  getMyFriends,
 } from "../controllers/user.js";
 import { isAuthenticated } from "../middlewares/auth.js";
 import { singleAvatar } from "../middlewares/multer.js";
@@ -58,5 +59,8 @@ app.put(
 
 // get my notifications
 app.get("/notifications", getMyNotifications);
+
+// get my friends & available friends to add in a group chat (who are not in the group chat)
+app.get("/friends", getMyFriends);
 
 export default app;
