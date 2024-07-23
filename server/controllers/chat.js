@@ -6,8 +6,8 @@ import {
 } from "../constants/events.js";
 import { getOtherMember } from "../lib/helper.js";
 import { TryCatch } from "../middlewares/error.js";
-import { Chat } from "../models/Chat.js";
-import { Message } from "../models/Message.js";
+import { Chat } from "../models/chat.js";
+import { Message } from "../models/message.js";
 import { User } from "../models/user.js";
 import { deleteFilesFromCloudinary, emitEvent } from "../utils/features.js";
 import { ErrorHandler } from "../utils/utility.js";
@@ -224,14 +224,20 @@ const leaveGroup = TryCatch(async (req, res, next) => {
 const sendAttachments = TryCatch(async (req, res, next) => {
   const { chatId } = req.body;
 
+  const files = req.files || [];
+
+  if (files.length < 1)
+    return next(new ErrorHandler("Please Upload Attachments", 400));
+
+  if (files.length > 5)
+    return next(new ErrorHandler("You can upload at most 5 files", 400));
+
   const [chat, user] = await Promise.all([
     Chat.findById(chatId),
     User.findById(req.userId, "name"),
   ]);
 
   if (!chat) return next(new ErrorHandler("chat not found", 404));
-
-  const files = req.files || [];
 
   if (files.length < 1) return next(new ErrorHandler("No files found", 400));
 
