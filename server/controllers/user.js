@@ -3,7 +3,7 @@ import { TryCatch } from "../middlewares/error.js";
 import { User } from "../models/user.js";
 import { cookieOptions, emitEvent, sendToken } from "../utils/features.js";
 import { ErrorHandler } from "../utils/utility.js";
-import { Chat } from "../models/Chat.js";
+import { Chat } from "../models/chat.js";
 import { Request } from "../models/request.js";
 import { NEW_REQUEST, REFETCH_CHATS } from "../constants/events.js";
 import { getOtherMember } from "../lib/helper.js";
@@ -210,7 +210,6 @@ const getMyFriends = TryCatch(async (req, res) => {
     const availableFriends = friends.filter(
       (friend) => !chat.members.includes(friend._id)
     );
-    console.log(availableFriends);
 
     return res.status(200).json({
       success: true,

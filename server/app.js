@@ -6,7 +6,7 @@ import { connectDb } from './utils/features.js';
 
 import chatRoute from './routes/chat.js';
 import userRoute from './routes/user.js';
-import { createMessagesInAChat } from "./seeders/chat.js";
+import adminRoute from './routes/admin.js';
 
 dotenv.config({
     path: './.env'
@@ -25,9 +25,10 @@ app.use(cookieParser());
 
 app.use("/user", userRoute);
 app.use("/chat", chatRoute);
+app.use("/admin", adminRoute);
 
 app.get('/', (req, res) => {
-    res.send('Hello from the App!');
+    res.send('ChatVista App!');
 });      
 
 app.use(errorMiddleware)
