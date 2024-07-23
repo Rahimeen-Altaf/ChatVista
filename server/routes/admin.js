@@ -4,13 +4,14 @@ import {
   allUsers,
   allMessages,
   getDashboardStats,
+  adminLogin,
 } from "../controllers/admin.js";
 
 const app = express.Router();
 
 app.get("/");
 
-app.post("/vverify");
+app.post("/verify", adminLogin);
 
 app.get("/users", allUsers);
 app.get("/chats", allChats);
