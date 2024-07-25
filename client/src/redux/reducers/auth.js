@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   user: null,
   isAdmin: false,
-  loader: true,
+  loading: true,
 };
 
 const authSlice = createSlice({
@@ -12,11 +12,11 @@ const authSlice = createSlice({
   reducers: {
     userExists: (state, action) => {
       state.user = action.payload;
-      state.loader = false;
+      state.loading = false;
     },
     userNotExists: (state) => {
       state.user = null;
-      state.loader = false;
+      state.loading = false;
     },
   },
 });
