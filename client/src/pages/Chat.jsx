@@ -7,6 +7,7 @@ import {
 } from "@mui/icons-material";
 import { IconButton, Skeleton, Stack } from "@mui/material";
 import { Fragment, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import FileMenu from "../components/dialogs/FileMenu";
 import AppLayout from "../components/layout/AppLayout";
 import MessageComponent from "../components/shared/MessageComponent";
@@ -15,15 +16,18 @@ import { grayColor, orange } from "../constants/color";
 import { NEW_MESSAGE } from "../constants/events";
 import { useErrors, useSocketEvents } from "../hooks/hook";
 import { useChatDetailsQuery, useGetMessagesQuery } from "../redux/api/api";
+import { setIsFileMenu } from "../redux/reducers/misc";
 import { getSocket } from "../socket";
 
 const Chat = ({ chatId, user }) => {
   const containerRef = useRef(null);
   const socket = getSocket();
+  const dispatch = useDispatch();
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [page, setPage] = useState(1);
+  const [fileMenuAnchor, setFileMenuAnchor] = useState(null);
 
   const chatDetails = useChatDetailsQuery({ chatId, skip: !chatId });
   const oldMessagesChunk = useGetMessagesQuery({ chatId, page });
@@ -42,6 +46,11 @@ const Chat = ({ chatId, user }) => {
     setPage,
     oldMessagesChunk.data?.messages
   );
+
+  const handleFileOpen = (e) => {
+    dispatch(setIsFileMenu(true));
+    setFileMenuAnchor(e.currentTarget);
+  };
 
   const members = chatDetails?.data?.chat?.members;
 
@@ -105,6 +114,7 @@ const Chat = ({ chatId, user }) => {
               left: "1.5rem",
               rotate: "30deg",
             }}
+            onClick={handleFileOpen}
           >
             <AttachFileIcon />
           </IconButton>
@@ -133,7 +143,7 @@ const Chat = ({ chatId, user }) => {
         </Stack>
       </form>
 
-      <FileMenu />
+      <FileMenu anchorEl={fileMenuAnchor} chatId={chatId} />
     </Fragment>
   );
 };

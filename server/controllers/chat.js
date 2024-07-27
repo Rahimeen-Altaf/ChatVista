@@ -9,7 +9,11 @@ import { TryCatch } from "../middlewares/error.js";
 import { Chat } from "../models/chat.js";
 import { Message } from "../models/message.js";
 import { User } from "../models/user.js";
-import { deleteFilesFromCloudinary, emitEvent } from "../utils/features.js";
+import {
+  deleteFilesFromCloudinary,
+  emitEvent,
+  uploadFilesToCloudinary,
+} from "../utils/features.js";
 import { ErrorHandler } from "../utils/utility.js";
 
 const newGroupChat = TryCatch(async (req, res, next) => {
@@ -241,8 +245,8 @@ const sendAttachments = TryCatch(async (req, res, next) => {
 
   if (files.length < 1) return next(new ErrorHandler("No files found", 400));
 
-  // Upload files here
-  const attachments = [];
+  // Upload files to cloudinary
+  const attachments = await uploadFilesToCloudinary(files);
 
   const messageForDb = {
     content: "",
@@ -416,10 +420,16 @@ const getMessages = TryCatch(async (req, res, next) => {
 });
 
 export {
-  addMembers, deleteChat, getChatDetails, getMessages, getMyChats,
+  addMembers,
+  deleteChat,
+  getChatDetails,
+  getMessages,
+  getMyChats,
   getMyGroups,
   leaveGroup,
   newGroupChat,
-  removeMember, renameGroup, sendAttachments
+  removeMember,
+  renameGroup,
+  sendAttachments
 };
 
