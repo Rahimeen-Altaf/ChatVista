@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { useErrors } from "../../hooks/hook";
 import { useMyChatsQuery } from "../../redux/api/api";
 import { setIsMobile } from "../../redux/reducers/misc";
+import { getSocket } from "../../socket";
 import Title from "../shared/Title";
 import ChatList from "../specific/ChatList";
 import Profile from "../specific/Profile";
@@ -16,6 +17,10 @@ const AppLayout = () => (WrappedComponent) => {
     const params = useParams();
     const dispatch = useDispatch();
     const chatId = params.chatId;
+
+    const socket = getSocket();
+
+    console.log(socket.id);
 
     const { isMobile } = useSelector((state) => state.misc);
     const { user } = useSelector((state) => state.auth);
@@ -77,7 +82,7 @@ const AppLayout = () => (WrappedComponent) => {
             )}
           </Grid>
           <Grid item xs={12} sm={8} md={5} lg={6} height={"100%"}>
-            <WrappedComponent {...props} />
+            <WrappedComponent {...props} chatId={chatId} user={user} />
           </Grid>
           <Grid
             item
@@ -90,7 +95,7 @@ const AppLayout = () => (WrappedComponent) => {
               bgcolor: "rgba(0,0,0,0.85)",
             }}
           >
-            <Profile user={user}/>
+            <Profile user={user} />
           </Grid>
         </Grid>
       </>

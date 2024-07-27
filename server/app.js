@@ -1,16 +1,18 @@
+import { v2 as cloudinary } from "cloudinary";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuid } from "uuid";
+import { corsOptions } from "./constants/config.js";
 import { NEW_MESSAGE, NEW_MESSAGE_ALERT } from "./constants/events.js";
 import { getSockets } from "./lib/helper.js";
+import { socketAuthenticator } from "./middlewares/auth.js";
 import { errorMiddleware } from "./middlewares/error.js";
 import { Message } from "./models/message.js";
 import { connectDb } from "./utils/features.js";
-import cors from "cors";
-import { v2 as cloudinary } from "cloudinary";
 
 import adminRoute from "./routes/admin.js";
 import chatRoute from "./routes/chat.js";
@@ -36,21 +38,14 @@ cloudinary.config({
 
 const app = express();
 const server = createServer(app);
-const io = new Server(server, {});
+const io = new Server(server, {
+  cors: corsOptions,
+});
 
 // Using Middleware Here
-app.use(express.json());  
+app.use(express.json());
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:4173",
-      process.env.CLIENT_URL,
-    ],
-    credentials: true,
-  })
-);
+app.use(cors(corsOptions));
 
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/chat", chatRoute);
@@ -60,13 +55,18 @@ app.get("/", (req, res) => {
   res.send("ChatVista App!");
 });
 
-io.use((socket, next) => {});
+io.use((socket, next) => {
+  cookieParser()(
+    socket.request,
+    socket.request.res,
+    async (error) => await socketAuthenticator(error, socket, next)
+  );
+});
 
 io.on("connection", (socket) => {
-  const user = {
-    _id: "123",
-    name: "Rahimeen",
-  };
+  const user = socket.userId;
+  console.log(user);
+
   userSocketIDs.set(user._id.toString(), socket.id);
 
   console.log("a user connected", socket.id);
@@ -74,7 +74,7 @@ io.on("connection", (socket) => {
   socket.on(NEW_MESSAGE, async ({ chatId, members, message }) => {
     const messageForRealTime = {
       content: message,
-      _id: uuidv4(),
+      _id: uuid(),
       sender: {
         _id: user._id,
         name: user.name,

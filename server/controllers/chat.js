@@ -295,8 +295,6 @@ const getChatDetails = TryCatch(async (req, res, next) => {
       chat,
     });
   } else {
-    const chatId = req.params.id;
-
     const chat = await Chat.findById(chatId);
 
     if (!chat) return next(new ErrorHandler("chat not found", 404));
@@ -418,15 +416,10 @@ const getMessages = TryCatch(async (req, res, next) => {
 });
 
 export {
-  addMembers,
-  getMyChats,
+  addMembers, deleteChat, getChatDetails, getMessages, getMyChats,
   getMyGroups,
   leaveGroup,
   newGroupChat,
-  removeMember,
-  sendAttachments,
-  getChatDetails,
-  renameGroup,
-  deleteChat,
-  getMessages,
+  removeMember, renameGroup, sendAttachments
 };
+
