@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react-refresh/only-export-components */
+import { useInfiniteScrollTop } from "6pp";
 import {
   AttachFile as AttachFileIcon,
   Send as SendIcon,
@@ -12,20 +13,35 @@ import MessageComponent from "../components/shared/MessageComponent";
 import { InputBox } from "../components/styles/StyledComponents";
 import { grayColor, orange } from "../constants/color";
 import { NEW_MESSAGE } from "../constants/events";
-import { useSocketEvents } from "../hooks/hook";
-import { useChatDetailsQuery } from "../redux/api/api";
+import { useErrors, useSocketEvents } from "../hooks/hook";
+import { useChatDetailsQuery, useGetMessagesQuery } from "../redux/api/api";
 import { getSocket } from "../socket";
 
 const Chat = ({ chatId, user }) => {
   const containerRef = useRef(null);
-
   const socket = getSocket();
 
-  const chatDetails = useChatDetailsQuery({ chatId, skip: !chatId });
-
   const [message, setMessage] = useState("");
-
   const [messages, setMessages] = useState([]);
+  const [page, setPage] = useState(1);
+
+  const chatDetails = useChatDetailsQuery({ chatId, skip: !chatId });
+  const oldMessagesChunk = useGetMessagesQuery({ chatId, page });
+
+  const errors = [
+    { isError: chatDetails.isError, error: chatDetails.error },
+    { isError: oldMessagesChunk.isError, error: oldMessagesChunk.error },
+  ];
+  useErrors(errors);
+
+  // eslint-disable-next-line no-unused-vars
+  const { data: oldMessages, setData: setOldMessages } = useInfiniteScrollTop(
+    containerRef,
+    oldMessagesChunk.data?.totalPages,
+    page,
+    setPage,
+    oldMessagesChunk.data?.messages
+  );
 
   const members = chatDetails?.data?.chat?.members;
 
@@ -47,6 +63,8 @@ const Chat = ({ chatId, user }) => {
 
   useSocketEvents(socket, eventHandler);
 
+  const allMessages = [...oldMessages, ...messages];
+
   return chatDetails.isLoading ? (
     <Skeleton />
   ) : (
@@ -63,7 +81,7 @@ const Chat = ({ chatId, user }) => {
           overflowY: "auto",
         }}
       >
-        {messages.map((i) => (
+        {allMessages.map((i) => (
           <MessageComponent message={i} user={user} key={i._id} />
         ))}
       </Stack>
