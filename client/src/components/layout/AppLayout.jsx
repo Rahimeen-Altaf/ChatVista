@@ -39,7 +39,9 @@ const AppLayout = () => (WrappedComponent) => {
 
     const handleMobileClose = () => dispatch(setIsMobile(false));
 
-    const newMessageAlertHandler = useCallback(() => { }, []);
+    const newMessageAlertHandler = useCallback((data) => { 
+      
+    }, []);
     
     const newRequestHandler = useCallback(() => {
       dispatch(incrementNotification());

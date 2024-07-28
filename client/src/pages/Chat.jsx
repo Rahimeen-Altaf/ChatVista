@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 /* eslint-disable react-refresh/only-export-components */
 import { useInfiniteScrollTop } from "6pp";
@@ -6,7 +7,7 @@ import {
   Send as SendIcon,
 } from "@mui/icons-material";
 import { IconButton, Skeleton, Stack } from "@mui/material";
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import FileMenu from "../components/dialogs/FileMenu";
 import AppLayout from "../components/layout/AppLayout";
@@ -64,9 +65,23 @@ const Chat = ({ chatId, user }) => {
     setMessage("");
   };
 
-  const newMessagesHandler = (data) => {
-    setMessages((prev) => [...prev, data.message]);
-  };
+  useEffect(() => {
+    if (!chatId) return;
+    return () => {
+      setMessages([]);
+      setMessage("");
+      setOldMessages([]);
+      setPage(1);
+    };
+  }, [chatId]);
+
+  const newMessagesHandler = useCallback(
+    (data) => {
+      if (data.chatId !== chatId) return;
+      setMessages((prev) => [...prev, data.message]);
+    },
+    [chatId]
+  );
 
   const eventHandler = { [NEW_MESSAGE]: newMessagesHandler };
 
