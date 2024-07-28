@@ -116,19 +116,6 @@ const Groups = () => {
     console.log("Remove Member", id);
   };
 
-  useEffect(() => {
-    if (chatId) {
-      setGroupName(`Group Name ${chatId}`);
-      setGroupNameUpdatedValue(`Group Name ${chatId}`);
-    }
-
-    return () => {
-      setGroupName("");
-      setGroupNameUpdatedValue("");
-      setIsEdit(false);
-    };
-  }, [chatId]);
-
   const iconBtns = (
     <>
       <Box
