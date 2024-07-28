@@ -86,7 +86,7 @@ const getMyGroups = TryCatch(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message: groups,
+    groups,
   });
 });
 

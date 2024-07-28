@@ -1,6 +1,14 @@
 /* eslint-disable react/display-name */
 /* eslint-disable react/prop-types */
 import {
+  Add as AddIcon,
+  Delete as DeleteIcon,
+  Done as DoneIcon,
+  Edit as EditIcon,
+  KeyboardBackspace as KeyboardBackspaceIcon,
+  Menu as MenuIcon,
+} from "@mui/icons-material";
+import {
   Backdrop,
   Box,
   Button,
@@ -12,21 +20,17 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import {
-  Add as AddIcon,
-  Delete as DeleteIcon,
-  Done as DoneIcon,
-  Edit as EditIcon,
-  KeyboardBackspace as KeyboardBackspaceIcon,
-  Menu as MenuIcon,
-} from "@mui/icons-material";
-import { useNavigate, useSearchParams } from "react-router-dom";
 import { lazy, memo, Suspense, useEffect, useState } from "react";
-import { bgGradient, matBlack } from "../constants/color";
-import { Link } from "../components/styles/StyledComponents";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { LayoutLoader } from "../components/layout/Loaders";
 import AvatarCard from "../components/shared/AvatarCard";
-import { sampleChats, sampleUsers } from "../constants/sampleData";
 import UserItem from "../components/shared/UserItem";
+import { Link } from "../components/styles/StyledComponents";
+import { bgGradient, matBlack } from "../constants/color";
+import { sampleUsers } from "../constants/sampleData";
+import { useErrors } from "../hooks/hook";
+import { useChatDetailsQuery, useMyGroupsQuery } from "../redux/api/api";
+
 const ConfirmDeleteDialog = lazy(() =>
   import("../components/dialogs/ConfirmDialog")
 );
@@ -38,14 +42,42 @@ const isAddMember = false;
 
 const Groups = () => {
   const chatId = useSearchParams()[0].get("group");
-
   const navigate = useNavigate();
+
+  const myGroups = useMyGroupsQuery("");
+  const groupDetails = useChatDetailsQuery(
+    { chatId, populate: true },
+    { skip: !chatId }
+  );
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [confirmDeleteDialog, setConfirmDeleteDialog] = useState(false);
   const [groupName, setGroupName] = useState("");
   const [groupNameUpdatedValue, setGroupNameUpdatedValue] = useState("");
-  const [confirmDeleteDialog, setConfirmDeleteDialog] = useState(false);
+  const [members, setMembers] = useState([]);
+
+  const errors = [
+    { isError: myGroups.isError, error: myGroups.error },
+    { isError: groupDetails.isError, error: groupDetails.error },
+  ];
+  useErrors(errors);
+
+  useEffect(() => {
+    const groupData = groupDetails.data;
+    if (groupData) {
+      setGroupName(groupData.chat.name);
+      setGroupNameUpdatedValue(groupData.chat.name);
+      setMembers(groupData.chat.members);
+    }
+
+    return () => {
+      setGroupName("");
+      setGroupNameUpdatedValue("");
+      setMembers([]);
+      setIsEdit(false);
+    };
+  }, [groupDetails.data]);
 
   const navigateBack = () => {
     navigate("/");
@@ -196,7 +228,9 @@ const Groups = () => {
     </Stack>
   );
 
-  return (
+  return myGroups.isLoading ? (
+    <LayoutLoader />
+  ) : (
     <Grid container height={"100vh"}>
       <Grid
         item
@@ -208,7 +242,7 @@ const Groups = () => {
         }}
         sm={4}
       >
-        <GroupsList myGroups={sampleChats} chatId={chatId} />
+        <GroupsList myGroups={myGroups?.data?.groups} chatId={chatId} />
       </Grid>
 
       <Grid
@@ -252,7 +286,7 @@ const Groups = () => {
             >
               {/* Members List */}
 
-              {sampleUsers.map((i) => (
+              {members.map((i) => (
                 <UserItem
                   key={i._id}
                   user={i}
@@ -300,7 +334,11 @@ const Groups = () => {
         open={isMobileMenuOpen}
         onClose={handleMobileClose}
       >
-        <GroupsList w={"50vw"} myGroups={sampleChats} chatId={chatId} />
+        <GroupsList
+          w={"50vw"}
+          myGroups={myGroups?.data?.groups}
+          chatId={chatId}
+        />
       </Drawer>
     </Grid>
   );
