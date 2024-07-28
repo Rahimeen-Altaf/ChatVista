@@ -19,6 +19,7 @@ import { useErrors, useSocketEvents } from "../hooks/hook";
 import { useChatDetailsQuery, useGetMessagesQuery } from "../redux/api/api";
 import { setIsFileMenu } from "../redux/reducers/misc";
 import { getSocket } from "../socket";
+import { removeNewMessagesAlert } from "../redux/reducers/chat";
 
 const Chat = ({ chatId, user }) => {
   const containerRef = useRef(null);
@@ -67,6 +68,9 @@ const Chat = ({ chatId, user }) => {
 
   useEffect(() => {
     if (!chatId) return;
+    
+    dispatch(removeNewMessagesAlert(chatId));
+
     return () => {
       setMessages([]);
       setMessage("");
