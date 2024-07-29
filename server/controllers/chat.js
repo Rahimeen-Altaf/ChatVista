@@ -171,6 +171,8 @@ const removeMember = TryCatch(async (req, res, next) => {
       )
     );
 
+  const allChatMembers = chat.members.map((i) => i.toString());
+
   chat.members = chat.members.filter(
     (member) => member.toString() !== userId.toString()
   );
@@ -181,7 +183,7 @@ const removeMember = TryCatch(async (req, res, next) => {
     message: `${userThatWillBeRemoved.name} has been removed from the group`,
   });
 
-  emitEvent(req, REFETCH_CHATS, chat.members);
+  emitEvent(req, REFETCH_CHATS, allChatMembers);
 
   res.status(200).json({
     success: true,
@@ -411,6 +413,13 @@ const getMessages = TryCatch(async (req, res, next) => {
 
   const resultPerPage = 20;
   const skip = (page - 1) * resultPerPage;
+
+  const chat = await Chat.findById(chatId);
+
+  if (!chat) return next(new ErrorHandler("chat not found", 404));
+
+  if (!chat.members.includes(req.userId.toString()))
+    return next(new ErrorHandler("You are not allowed to view this chat", 403));
 
   const [messages, totalMessagesCount] = await Promise.all([
     Message.find({ chat: chatId })

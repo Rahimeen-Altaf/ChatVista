@@ -4,7 +4,7 @@
 import { Drawer, Grid, Skeleton } from "@mui/material";
 import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   NEW_MESSAGE_ALERT,
   NEW_REQUEST,
@@ -27,6 +27,7 @@ import Header from "./Header";
 const AppLayout = () => (WrappedComponent) => {
   return (props) => {
     const params = useParams();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const chatId = params.chatId;
 
@@ -70,7 +71,8 @@ const AppLayout = () => (WrappedComponent) => {
 
     const refetchListener = useCallback(() => {
       refetch();
-    }, [refetch]);
+      navigate("/");
+    }, [refetch, navigate]);
 
     const eventHandler = {
       [NEW_MESSAGE_ALERT]: newMessageAlertListener,
