@@ -21,6 +21,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { motion } from "framer-motion";
 import { lazy, memo, Suspense, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -65,9 +66,7 @@ const Groups = () => {
   const [removeMember, isLoadingRemoveMember] = useAsyncMutation(
     useRemoveGroupMemberMutation
   );
-  const [deleteGroup, isLoadingDeleteGroup] = useAsyncMutation(
-    useDeleteChatMutation
-  );
+  const [deleteGroup] = useAsyncMutation(useDeleteChatMutation);
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -374,8 +373,13 @@ const GroupsList = ({ w = "100%", myGroups = [], chatId }) => (
     }}
   >
     {myGroups.length > 0 ? (
-      myGroups.map((group) => (
-        <GroupListItem group={group} chatId={chatId} key={group._id} />
+      myGroups.map((group, index) => (
+        <GroupListItem
+          group={group}
+          chatId={chatId}
+          key={group._id}
+          index={index}
+        />
       ))
     ) : (
       <Typography textAlign={"center"} padding="1rem">
@@ -385,23 +389,29 @@ const GroupsList = ({ w = "100%", myGroups = [], chatId }) => (
   </Stack>
 );
 
-const GroupListItem = memo(({ group, chatId }) => {
+const GroupListItem = memo(({ group, chatId, index = 0 }) => {
   const { name, avatar, _id } = group;
 
   return (
-    <Link
-      to={`?group=${_id}`}
-      onClick={(e) => {
-        if (chatId === _id) {
-          e.preventDefault();
-        }
-      }}
+    <motion.div
+      initial={{ opacity: 0, y: "-100%" }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.02 }}
     >
-      <Stack direction={"row"} spacing={"1rem"} alignItems={"center"}>
-        <AvatarCard avatar={avatar} />
-        <Typography>{name}</Typography>
-      </Stack>
-    </Link>
+      <Link
+        to={`?group=${_id}`}
+        onClick={(e) => {
+          if (chatId === _id) {
+            e.preventDefault();
+          }
+        }}
+      >
+        <Stack direction={"row"} spacing={"1rem"} alignItems={"center"}>
+          <AvatarCard avatar={avatar} />
+          <Typography>{name}</Typography>
+        </Stack>
+      </Link>
+    </motion.div>
   );
 });
 export default Groups;
