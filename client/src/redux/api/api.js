@@ -35,7 +35,7 @@ const api = createApi({
 
     getNotifications: builder.query({
       query: () => ({
-        url: "user/notifications",
+        url: `user/notifications`,
         credentials: "include",
       }),
       keepUnusedDataFor: 0,
@@ -54,7 +54,7 @@ const api = createApi({
     chatDetails: builder.query({
       query: ({ chatId, populate = false }) => {
         let url = `chat/${chatId}`;
-        if (populate) url += `?populate=true`;
+        if (populate) url += "?populate=true";
 
         return {
           url,
@@ -141,6 +141,24 @@ const api = createApi({
       }),
       invalidatesTags: ["Chat"],
     }),
+
+    deleteChat: builder.mutation({
+      query: (chatId) => ({
+        url: `chat/${chatId}`,
+        method: "DELETE",
+        credentials: "include",
+      }),
+      invalidatesTags: ["Chat"],
+    }),
+
+    leaveGroup: builder.mutation({
+      query: (chatId) => ({
+        url: `chat/leave/${chatId}`,
+        method: "DELETE",
+        credentials: "include",
+      }),
+      invalidatesTags: ["Chat"],
+    }),
   }),
 });
 
@@ -160,4 +178,6 @@ export const {
   useRenameGroupMutation,
   useRemoveGroupMemberMutation,
   useAddGroupMembersMutation,
+  useDeleteChatMutation,
+  useLeaveGroupMutation,
 } = api;

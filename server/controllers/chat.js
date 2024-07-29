@@ -235,7 +235,7 @@ const leaveGroup = TryCatch(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message: "User left the group successfully",
+    message: "Left the group successfully",
   });
 });
 
@@ -399,7 +399,7 @@ const deleteChat = TryCatch(async (req, res, next) => {
     Message.deleteMany({ chat: chatId }),
   ]);
 
-  emitEvent(req, REFETCH_CHATS, chat.members);
+  emitEvent(req, REFETCH_CHATS, members);
 
   res.status(200).json({
     success: true,

@@ -86,8 +86,8 @@ const Chat = ({ chatId, user }) => {
   }, [messages]);
 
   useEffect(() => {
-    if (!chatDetails.data?.chat) navigate("/");
-  }, [chatDetails.data]);
+    if (chatDetails.isSuccess && !chatDetails.data?.chat) navigate("/");
+  }, [chatDetails.isSuccess, chatDetails.data]);
 
   useEffect(() => {
     if (!chatId) return;
