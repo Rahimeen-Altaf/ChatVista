@@ -39,8 +39,8 @@ const addMemberValidator = () => [
   body("members")
     .notEmpty()
     .withMessage("Members are required")
-    .isArray({ min: 1, max: 97 })
-    .withMessage("Members must be between 1 and 97"),
+    .isArray()
+    .withMessage("Members must be an array"),
 ];
 
 const removeMemberValidator = () => [

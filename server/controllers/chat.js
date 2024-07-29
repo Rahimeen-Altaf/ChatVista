@@ -106,6 +106,18 @@ const addMembers = TryCatch(async (req, res, next) => {
   if (chat.creator.toString() !== req.userId.toString())
     return next(new ErrorHandler("You are not allowed to add members", 403));
 
+  const membersLimit = 100 - chat.members.length;
+  if (membersLimit < 1)
+    return next(new ErrorHandler("Members limit reached", 400));
+
+  if (members.length > membersLimit)
+    return next(
+      new ErrorHandler(
+        `you can only add at most ${membersLimit} members in this group chat`,
+        400
+      )
+    );
+
   const allNewMembersPromise = members.map((i) => User.findById(i, "name"));
 
   const allNewMembers = await Promise.all(allNewMembersPromise);
@@ -430,6 +442,5 @@ export {
   newGroupChat,
   removeMember,
   renameGroup,
-  sendAttachments
+  sendAttachments,
 };
-

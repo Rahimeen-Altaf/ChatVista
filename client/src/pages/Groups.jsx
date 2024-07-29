@@ -29,12 +29,13 @@ import { Link } from "../components/styles/StyledComponents";
 import { bgGradient, matBlack } from "../constants/color";
 import { useAsyncMutation, useErrors } from "../hooks/hook";
 import {
-  useAddGroupMembersMutation,
   useChatDetailsQuery,
   useMyGroupsQuery,
   useRemoveGroupMemberMutation,
   useRenameGroupMutation,
 } from "../redux/api/api";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsAddMember } from "../redux/reducers/misc";
 
 const ConfirmDeleteDialog = lazy(() =>
   import("../components/dialogs/ConfirmDialog")
@@ -43,11 +44,12 @@ const AddMemberDialog = lazy(() =>
   import("../components/dialogs/AddMemberDialog")
 );
 
-const isAddMember = false;
-
 const Groups = () => {
   const chatId = useSearchParams()[0].get("group");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const {isAddMember} = useSelector((state) => state.misc);
 
   const myGroups = useMyGroupsQuery("");
   const groupDetails = useChatDetailsQuery(
@@ -59,9 +61,6 @@ const Groups = () => {
   );
   const [removeMember, isLoadingRemoveMember] = useAsyncMutation(
     useRemoveGroupMemberMutation
-  );
-  const [addMembers, isLoadingAddMembers] = useAsyncMutation(
-    useAddGroupMembersMutation
   );
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -121,7 +120,7 @@ const Groups = () => {
   };
 
   const openAddMemberHandler = () => {
-    console.log("Add Member");
+    dispatch(setIsAddMember(true));
   };
 
   const deleteHandler = () => {
@@ -315,7 +314,7 @@ const Groups = () => {
 
       {isAddMember && (
         <Suspense fallback={<Backdrop open />}>
-          <AddMemberDialog />
+          <AddMemberDialog chatId={chatId}/>
         </Suspense>
       )}
 
