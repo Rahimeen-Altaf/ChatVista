@@ -52,7 +52,6 @@ const Chat = ({ chatId, user }) => {
     { isError: chatDetails.isError, error: chatDetails.error },
     { isError: oldMessagesChunk.isError, error: oldMessagesChunk.error },
   ];
-  useErrors(errors);
 
   // eslint-disable-next-line no-unused-vars
   const { data: oldMessages, setData: setOldMessages } = useInfiniteScrollTop(
@@ -143,9 +142,10 @@ const Chat = ({ chatId, user }) => {
   );
 
   const alertListener = useCallback(
-    (content) => {
+    (data) => {
+      if (data.chatId !== chatId) return;
       const messageForAlert = {
-        content,
+        content: data.message,
         sender: {
           _id: "123",
           name: "Admin",
@@ -165,6 +165,8 @@ const Chat = ({ chatId, user }) => {
     [START_TYPING]: startTypingListener,
     [STOP_TYPING]: stopTypingListener,
   };
+
+  useErrors(errors);
 
   useSocketEvents(socket, eventHandler);
 

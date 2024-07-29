@@ -28,8 +28,12 @@ const newGroupChat = TryCatch(async (req, res, next) => {
     members: allMembers,
   });
 
+  const chat = await Chat.findOne({ name, members: allMembers });
+  const chatId = chat._id;
+
   emitEvent(req, ALERT, allMembers, {
     message: `New group chat created: ${name}`,
+    chatId,
   });
   emitEvent(req, REFETCH_CHATS, members);
 
@@ -137,6 +141,7 @@ const addMembers = TryCatch(async (req, res, next) => {
 
   emitEvent(req, ALERT, chat.members, {
     message: `${allUsersName} has been added in the group`,
+    chatId,
   });
 
   emitEvent(req, REFETCH_CHATS, chat.members);
@@ -181,6 +186,7 @@ const removeMember = TryCatch(async (req, res, next) => {
 
   emitEvent(req, ALERT, chat.members, {
     message: `${userThatWillBeRemoved.name} has been removed from the group`,
+    chatId,
   });
 
   emitEvent(req, REFETCH_CHATS, allChatMembers);
@@ -231,6 +237,7 @@ const leaveGroup = TryCatch(async (req, res, next) => {
 
   emitEvent(req, ALERT, chat.members, {
     message: `${user.name} has left the group`,
+    chatId,
   });
 
   res.status(200).json({
@@ -347,6 +354,7 @@ const renameGroup = TryCatch(async (req, res, next) => {
 
   emitEvent(req, ALERT, chat.members, {
     message: `Group chat renamed to ${name}`,
+    chatId,
   });
 
   emitEvent(req, REFETCH_CHATS, chat.members);
@@ -401,9 +409,13 @@ const deleteChat = TryCatch(async (req, res, next) => {
 
   emitEvent(req, REFETCH_CHATS, members);
 
+  const isGroup = chat.groupChat;
+
   res.status(200).json({
     success: true,
-    message: "Group chat deleted successfully",
+    message: isGroup
+      ? "Group chat deleted successfully"
+      : "Chat deleted successfully",
   });
 });
 
