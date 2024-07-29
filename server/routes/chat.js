@@ -44,7 +44,7 @@ app.put("/addmembers", addMemberValidator(), validateHandler, addMembers);
 
 // Remove Member from Group
 app.put(
-  "/removemembers",
+  "/removemember",
   removeMemberValidator(),
   validateHandler,
   removeMember

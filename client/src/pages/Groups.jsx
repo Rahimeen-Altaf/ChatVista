@@ -29,8 +29,10 @@ import { Link } from "../components/styles/StyledComponents";
 import { bgGradient, matBlack } from "../constants/color";
 import { useAsyncMutation, useErrors } from "../hooks/hook";
 import {
+  useAddGroupMembersMutation,
   useChatDetailsQuery,
   useMyGroupsQuery,
+  useRemoveGroupMemberMutation,
   useRenameGroupMutation,
 } from "../redux/api/api";
 
@@ -54,6 +56,12 @@ const Groups = () => {
   );
   const [updateGroup, isLoadingGroupName] = useAsyncMutation(
     useRenameGroupMutation
+  );
+  const [removeMember, isLoadingRemoveMember] = useAsyncMutation(
+    useRemoveGroupMemberMutation
+  );
+  const [addMembers, isLoadingAddMembers] = useAsyncMutation(
+    useAddGroupMembersMutation
   );
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -121,8 +129,8 @@ const Groups = () => {
     closeConfirmDeleteHandler();
   };
 
-  const removeMemberHandler = (id) => {
-    console.log("Remove Member", id);
+  const removeMemberHandler = (userId) => {
+    removeMember("Removing Member...", { chatId, userId });
   };
 
   const iconBtns = (
