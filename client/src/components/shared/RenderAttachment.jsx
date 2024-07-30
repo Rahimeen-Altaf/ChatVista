@@ -10,7 +10,7 @@ const RenderAttachment = (file, url) => {
       return (
         <img
           src={transformImage(url, 200)}
-          alt="attachment"
+          alt="Attachment"
           width={"180px"}
           height={"150px"}
           align="center"
