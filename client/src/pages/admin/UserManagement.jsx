@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import AdminLayout from "../../components/layout/AdminLayout";
 import Table from "../../components/shared/Table";
 import { server } from "../../constants/config";
-import { dashboardData } from "../../constants/sampleData";
 import { useErrors } from "../../hooks/hook";
 import { transformImage } from "../../lib/features";
 
