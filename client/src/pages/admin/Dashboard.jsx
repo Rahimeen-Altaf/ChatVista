@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useFetchData } from "6pp";
 import {
   AdminPanelSettings as AdminPanelSettingsIcon,
   Group as GroupIcon,
@@ -6,7 +7,14 @@ import {
   Notifications as NotificationsIcon,
   Person as PersonIcon,
 } from "@mui/icons-material";
-import { Box, Container, Paper, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  Paper,
+  Skeleton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import moment from "moment";
 import AdminLayout from "../../components/layout/AdminLayout";
 import { DoughnutChart, LineChart } from "../../components/specific/Charts";
@@ -15,16 +23,28 @@ import {
   SearchField,
 } from "../../components/styles/StyledComponents";
 import { matBlack } from "../../constants/color";
+import { server } from "../../constants/config";
+import { useErrors } from "../../hooks/hook";
 
 const Dashboard = () => {
+  const { loading, data, error } = useFetchData(
+    `${server}/api/v1/admin/stats`,
+    "dashboard-stats"
+  );
+
+  const { stats } = data || {};
+
+  useErrors([
+    {
+      isError: error,
+      error: error,
+    },
+  ]);
+
   const Appbar = (
     <Paper
       elevation={3}
-      sx={{
-        padding: "2rem",
-        margin: "2rem 0",
-        borderRadius: "1rem",
-      }}
+      sx={{ padding: "2rem", margin: "2rem 0", borderRadius: "1rem" }}
     >
       <Stack direction={"row"} alignItems={"center"} spacing={"1rem"}>
         <AdminPanelSettingsIcon sx={{ fontSize: "3rem" }} />
@@ -32,9 +52,7 @@ const Dashboard = () => {
         <SearchField placeholder="Search..." />
 
         <CurveButton>Search</CurveButton>
-
         <Box flexGrow={1} />
-
         <Typography
           display={{
             xs: "none",
@@ -57,86 +75,103 @@ const Dashboard = () => {
         xs: "column",
         sm: "row",
       }}
-      spacing={"2rem"}
-      justifyContent={"space-between"}
+      spacing="2rem"
+      justifyContent="space-between"
       alignItems={"center"}
       margin={"2rem 0"}
     >
-      <Widget title={"Users"} value={34} Icon={<PersonIcon />} />
-      <Widget title={"Chats"} value={3} Icon={<GroupIcon />} />
-      <Widget title={"Messages"} value={453} Icon={<MessageIcon />} />
+      <Widget title={"Users"} value={stats?.usersCount} Icon={<PersonIcon />} />
+      <Widget
+        title={"Chats"}
+        value={stats?.totalChatsCount}
+        Icon={<GroupIcon />}
+      />
+      <Widget
+        title={"Messages"}
+        value={stats?.messagesCount}
+        Icon={<MessageIcon />}
+      />
     </Stack>
   );
 
   return (
     <AdminLayout>
-      <Container component={"main"}>
-        {Appbar}
+      {loading ? (
+        <Skeleton height={"100vh"} />
+      ) : (
+        <Container component={"main"}>
+          {Appbar}
 
-        <Stack
-          direction={{
-            xs: "column",
-            lg: "row",
-          }}
-          flexWrap={"wrap"}
-          justifyContent={"center"}
-          alignItems={{
-            xs: "center",
-            lg: "stretch",
-          }}
-          sx={{ gap: "2rem" }}
-        >
-          <Paper
-            elevation={3}
-            sx={{
-              padding: "2rem 3.5rem",
-              borderRadius: "1rem",
-              width: { xs: "100%", lg: "50%" },
-              maxWidth: "45rem",
+          <Stack
+            direction={{
+              xs: "column",
+              lg: "row",
             }}
-          >
-            <Typography margin={"2rem 0"} variant="h4">
-              Last Messages
-            </Typography>
-
-            <LineChart value={[4,22,67,45,23,34,12]} />
-          </Paper>
-
-          <Paper
-            elevation={3}
-            sx={{
-              padding: "1rem",
-              borderRadius: "1rem",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: { xs: "100%", lg: "50%" },
-              maxWidth: "25rem",
+            flexWrap={"wrap"}
+            justifyContent={"center"}
+            alignItems={{
+              xs: "center",
+              lg: "stretch",
             }}
+            sx={{ gap: "2rem" }}
           >
-            <DoughnutChart
-              labels={["Single Chats", "Group Chats"]}
-              value={[23, 66]}
-            />
-
-            <Stack
-              position={"absolute"}
-              direction={"row"}
-              justifyContent={"center"}
-              alignItems={"center"}
-              spacing={"0.5rem"}
-              width={"100%"}
-              height={"100%"}
+            <Paper
+              elevation={3}
+              sx={{
+                padding: "2rem 3.5rem",
+                borderRadius: "1rem",
+                flex: { lg: 1 },
+                width: "100%",
+                maxWidth: { lg: "45rem" },
+              }}
             >
-              <GroupIcon />
-              <Typography>Vs </Typography>
-              <PersonIcon />
-            </Stack>
-          </Paper>
-        </Stack>
+              <Typography margin={"2rem 0"} variant="h4">
+                Last Messages
+              </Typography>
 
-        {Widgets}
-      </Container>
+              <LineChart value={stats?.messagesChart || []} />
+            </Paper>
+
+            <Paper
+              elevation={3}
+              sx={{
+                padding: "1rem ",
+                borderRadius: "1rem",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flex: { lg: 1 },
+                width: "100%",
+                maxWidth: { lg: "25rem" },
+                position: "relative",
+              }}
+            >
+              <DoughnutChart
+                labels={["Single Chats", "Group Chats"]}
+                value={[
+                  stats?.totalChatsCount - stats?.groupsCount || 0,
+                  stats?.groupsCount || 0,
+                ]}
+              />
+
+              <Stack
+                position={"absolute"}
+                direction={"row"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                spacing={"0.5rem"}
+                width={"100%"}
+                height={"100%"}
+              >
+                <GroupIcon /> <Typography>Vs </Typography>
+                <PersonIcon />
+              </Stack>
+            </Paper>
+          </Stack>
+
+          {Widgets}
+        </Container>
+      )}
     </AdminLayout>
   );
 };
@@ -173,4 +208,5 @@ const Widget = ({ title, value, Icon }) => (
     </Stack>
   </Paper>
 );
+
 export default Dashboard;
