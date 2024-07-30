@@ -134,7 +134,10 @@ const Login = () => {
             <>
               <Typography variant="h5">Login</Typography>
               <form
-                style={{ width: "100%", marginTop: "1rem" }}
+                style={{
+                  width: "100%",
+                  marginTop: "1rem",
+                }}
                 onSubmit={handleLogin}
               >
                 <TextField
@@ -147,12 +150,6 @@ const Login = () => {
                   onChange={username.changeHandler}
                 />
 
-                {username.error && (
-                  <Typography color="error" variant="caption">
-                    {username.error}
-                  </Typography>
-                )}
-
                 <TextField
                   required
                   fullWidth
@@ -164,14 +161,10 @@ const Login = () => {
                   onChange={password.changeHandler}
                 />
 
-                {password.error && (
-                  <Typography color="error" variant="caption">
-                    {password.error}
-                  </Typography>
-                )}
-
                 <Button
-                  sx={{ marginTop: "1rem" }}
+                  sx={{
+                    marginTop: "1rem",
+                  }}
                   variant="contained"
                   color="primary"
                   type="submit"
@@ -186,10 +179,10 @@ const Login = () => {
                 </Typography>
 
                 <Button
-                  variant="text"
-                  fullWidth
-                  onClick={toggleLogin}
                   disabled={isLoading}
+                  fullWidth
+                  variant="text"
+                  onClick={toggleLogin}
                 >
                   Sign Up Instead
                 </Button>
@@ -199,7 +192,10 @@ const Login = () => {
             <>
               <Typography variant="h5">Sign Up</Typography>
               <form
-                style={{ width: "100%", marginTop: "1rem" }}
+                style={{
+                  width: "100%",
+                  marginTop: "1rem",
+                }}
                 onSubmit={handleSignUp}
               >
                 <Stack position={"relative"} width={"10rem"} margin={"auto"}>
@@ -215,8 +211,8 @@ const Login = () => {
                   <IconButton
                     sx={{
                       position: "absolute",
-                      right: 0,
-                      bottom: 0,
+                      bottom: "0",
+                      right: "0",
                       color: "white",
                       bgcolor: "rgba(0,0,0,0.5)",
                       ":hover": {
@@ -266,7 +262,6 @@ const Login = () => {
                   value={bio.value}
                   onChange={bio.changeHandler}
                 />
-
                 <TextField
                   required
                   fullWidth
@@ -294,14 +289,10 @@ const Login = () => {
                   onChange={password.changeHandler}
                 />
 
-                {password.error && (
-                  <Typography color="error" variant="caption">
-                    {password.error}
-                  </Typography>
-                )}
-
                 <Button
-                  sx={{ marginTop: "1rem" }}
+                  sx={{
+                    marginTop: "1rem",
+                  }}
                   variant="contained"
                   color="primary"
                   type="submit"
@@ -316,10 +307,10 @@ const Login = () => {
                 </Typography>
 
                 <Button
-                  variant="text"
-                  fullWidth
-                  onClick={toggleLogin}
                   disabled={isLoading}
+                  fullWidth
+                  variant="text"
+                  onClick={toggleLogin}
                 >
                   Login Instead
                 </Button>

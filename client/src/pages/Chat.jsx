@@ -18,6 +18,8 @@ import { InputBox } from "../components/styles/StyledComponents";
 import { grayColor, orange } from "../constants/color";
 import {
   ALERT,
+  CHAT_JOINED,
+  CHAT_LEFT,
   NEW_MESSAGE,
   START_TYPING,
   STOP_TYPING,
@@ -91,6 +93,8 @@ const Chat = ({ chatId, user }) => {
   useEffect(() => {
     if (!chatId) return;
 
+    socket.emit(CHAT_JOINED, { userId: user._id, members });
+
     dispatch(removeNewMessagesAlert(chatId));
 
     return () => {
@@ -98,6 +102,7 @@ const Chat = ({ chatId, user }) => {
       setMessage("");
       setOldMessages([]);
       setPage(1);
+      socket.emit(CHAT_LEFT, { userId: user._id, members });
     };
   }, [chatId]);
 
