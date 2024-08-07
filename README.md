@@ -1,3 +1,3 @@
 # ChatVista
 ChatVista
->This is a MERN project
+>This is a MERN project.
