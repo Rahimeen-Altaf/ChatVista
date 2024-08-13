@@ -95,9 +95,9 @@ const searchUser = TryCatch(async (req, res) => {
   // Get all my friends; people I have chatted with from my chats
   const MeAndMyFriends = myChats.flatMap((chat) => chat.members);
 
-  // Get all users that are except me and my friends; people I have not chatted with
+  // Ensure your own ID is excluded
   const otherUsers = await User.find({
-    _id: { $nin: MeAndMyFriends },
+    _id: { $nin: [...MeAndMyFriends, req.userId] }, // Explicitly exclude your user ID
     name: { $regex: name, $options: "i" },
   });
 
