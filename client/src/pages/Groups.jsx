@@ -74,6 +74,7 @@ const Groups = () => {
   const [groupName, setGroupName] = useState("");
   const [groupNameUpdatedValue, setGroupNameUpdatedValue] = useState("");
   const [members, setMembers] = useState([]);
+  const [groupAdmin, setGroupAdmin] = useState("");
 
   const errors = [
     { isError: myGroups.isError, error: myGroups.error },
@@ -86,7 +87,18 @@ const Groups = () => {
     if (groupData) {
       setGroupName(groupData.chat.name);
       setGroupNameUpdatedValue(groupData.chat.name);
-      setMembers(groupData.chat.members);
+
+      // Find the group admin from the members array
+      const admin = groupData.chat.members.find(
+        (member) => member._id === groupData.chat.creator
+      );
+
+      const otherMembers = groupData.chat.members.filter(
+        (member) => member._id !== admin._id
+      );
+
+      setMembers(otherMembers);
+      setGroupAdmin(admin);
     }
 
     return () => {
@@ -94,6 +106,7 @@ const Groups = () => {
       setGroupNameUpdatedValue("");
       setMembers([]);
       setIsEdit(false);
+      setGroupAdmin("");
     };
   }, [groupDetails.data]);
 
@@ -135,6 +148,7 @@ const Groups = () => {
     setGroupNameUpdatedValue("");
     setMembers([]);
     setIsEdit(false);
+    setGroupAdmin("");
   };
 
   const removeMemberHandler = (userId) => {
@@ -279,12 +293,16 @@ const Groups = () => {
             {GroupName}
 
             <Typography
-              margin={"2rem"}
+              margin={"0.5rem"}
               alignSelf={"flex-start"}
               variant="body1"
             >
               Members
             </Typography>
+
+            {groupAdmin && (
+              <Typography>Group Admin: {groupAdmin.name}</Typography>
+            )}
 
             <Stack
               maxWidth={"45rem"}
@@ -300,7 +318,6 @@ const Groups = () => {
               overflow={"auto"}
             >
               {/* Members List */}
-
               {isLoadingRemoveMember ? (
                 <CircularProgress />
               ) : (
