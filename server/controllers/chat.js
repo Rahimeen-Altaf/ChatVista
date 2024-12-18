@@ -372,50 +372,56 @@ const deleteChat = TryCatch(async (req, res, next) => {
 
   const chat = await Chat.findById(chatId);
 
-  if (!chat) return next(new ErrorHandler("chat not found", 404));
+  if (!chat) return next(new ErrorHandler("Chat not found", 404));
 
   const members = chat.members;
 
-  if (chat.groupChat && chat.creator.toString() !== req.userId.toString())
+  // Permissions check
+  if (chat.groupChat && chat.creator.toString() !== req.userId.toString()) {
     return next(
       new ErrorHandler("You are not allowed to delete this group", 403)
     );
+  }
 
-  if (!chat.groupChat && !chat.members.includes(req.userId.toString()))
+  if (!chat.groupChat && !chat.members.includes(req.userId.toString())) {
     return next(
       new ErrorHandler("You are not allowed to delete this chat", 403)
     );
+  }
 
-  // Here we have to delete all the messages of this chat as well as attachments or files from cloudinary
-
+  // Retrieve messages with attachments
   const messagesWithAttachments = await Message.find({
     chat: chatId,
     attachments: { $exists: true, $ne: [] },
   });
 
-  const public_ids = [];
+  // Delete attachments from Cloudinary
+  const attachmentsToDelete = messagesWithAttachments.flatMap(
+    (message) => message.attachments // An array of Cloudinary public_ids
+  );
 
-  messagesWithAttachments.forEach(({ attachments }) => {
-    attachments.forEach(({ public_id }) => {
-      public_ids.push(public_id);
-    });
-  });
+  if (attachmentsToDelete.length > 0) {
+    try {
+      const deleteResults = await deleteFilesFromCloudinary(
+        attachmentsToDelete
+      );
+      console.log("Deleted attachments:", deleteResults);
+    } catch (error) {
+      return next(
+        new ErrorHandler(`Error deleting attachments: ${error.message}`, 500)
+      );
+    }
+  }
 
-  await Promise.all([
-    deleteFilesFromCloudinary(public_ids),
-    Chat.deleteOne({ _id: chatId }),
-    Message.deleteMany({ chat: chatId }),
-  ]);
+  // Delete messages from the database
+  await Message.deleteMany({ chat: chatId });
 
-  emitEvent(req, REFETCH_CHATS, members);
-
-  const isGroup = chat.groupChat;
+  // Finally, delete the chat
+  await Chat.findByIdAndDelete(chatId);
 
   res.status(200).json({
     success: true,
-    message: isGroup
-      ? "Group chat deleted successfully"
-      : "Chat deleted successfully",
+    message: "Chat and its messages have been successfully deleted",
   });
 });
 

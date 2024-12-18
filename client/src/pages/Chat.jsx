@@ -55,7 +55,6 @@ const Chat = ({ chatId, user }) => {
     { isError: oldMessagesChunk.isError, error: oldMessagesChunk.error },
   ];
 
-  // eslint-disable-next-line no-unused-vars
   const { data: oldMessages, setData: setOldMessages } = useInfiniteScrollTop(
     containerRef,
     oldMessagesChunk.data?.totalPages,

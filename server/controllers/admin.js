@@ -110,25 +110,28 @@ const allChats = TryCatch(async (req, res) => {
 });
 
 const allMessages = TryCatch(async (req, res) => {
+  console.log("hello");
   const messages = await Message.find({})
     .populate("sender", "name avatar")
     .populate("chat", "groupChat");
 
-  const transformedMessages = messages.map(
-    ({ _id, attachments, chat, sender, content, createdAt }) => ({
-      _id,
-      attachments,
-      content,
-      createdAt,
-      chat: chat._id,
-      groupChat: chat.groupChat,
-      sender: {
-        _id: sender._id,
-        name: sender.name,
-        avatar: sender.avatar.url,
-      },
-    })
-  );
+  const transformedMessages = messages
+    .filter(({ chat, sender }) => chat && sender) // Ensure chat and sender are valid before proceeding
+    .map(({ _id, attachments, chat, sender, content, createdAt }) => {
+      return {
+        _id,
+        attachments,
+        content,
+        createdAt,
+        chat: chat._id, // Accessing chat._id only if chat is valid
+        groupChat: chat.groupChat,
+        sender: {
+          _id: sender?._id || "Unknown", // Accessing sender._id only if sender is valid
+          name: sender?.name || "Unknown", // Avoid error if name is null or undefined
+          avatar: sender?.avatar ? sender.avatar.url : null, // Avoid error if avatar is null or undefined
+        },
+      };
+    });
 
   return res.status(200).json({
     success: true,

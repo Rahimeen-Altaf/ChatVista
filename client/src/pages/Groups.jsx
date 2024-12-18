@@ -85,6 +85,7 @@ const Groups = () => {
   useEffect(() => {
     const groupData = groupDetails.data;
     if (groupData) {
+      
       setGroupName(groupData.chat.name);
       setGroupNameUpdatedValue(groupData.chat.name);
 

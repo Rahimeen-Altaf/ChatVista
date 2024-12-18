@@ -69,7 +69,34 @@ const uploadFilesToCloudinary = async (files = []) => {
   }
 };
 
-const deleteFilesFromCloudinary = async (public_ids) => {};
+const deleteFilesFromCloudinary = async (attachments = []) => {
+  const deletePromises = attachments.map((attachment) => {
+    const public_id =
+      typeof attachment.public_id === "string"
+        ? attachment.public_id
+        : attachment.public_id?.public_id; // Extract nested public_id
+
+    return new Promise((resolve, reject) => {
+      cloudinary.uploader.destroy(public_id, (error, result) => {
+        if (error) return reject({ public_id, error });
+        resolve({ public_id, result });
+      });
+    });
+  });
+
+  try {
+    const results = await Promise.all(deletePromises);
+
+    const formattedResults = results.map(({ public_id, result }) => ({
+      public_id,
+      deleted: result.result === "ok",
+    }));
+
+    return formattedResults;
+  } catch (error) {
+    throw new Error(`Error deleting files from Cloudinary: ${error}`);
+  }
+};
 
 export {
   connectDb,
